@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Influencer | Find Campaigns</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/static/css/home.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </head>
+    <body style="background-color: #fff8dc;">
+        <nav class="navbar navbar-expand-lg bg-body-secondary">
+            <div class="container-fluid">
+              <a class="navbar-brand">Influencer Engagement Platform</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown" style="justify-content:right">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/influencer/{{influencer.influencer_username}}/dashboard">Dashboard</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/influencer/{{influencer.influencer_username}}/find">Find</a>
+                  </li>
+                  <li>
+              <form class="d-flex" action='/influencer/{{ influencer.influencer_username }}/dashboard' method='POST'>
+                <button class="btn btn-outline-danger" type="submit" value='Logout' name='submit'>Logout</button>
+              </form>
+            </li>
+            </div>
+        </ul>
+            </div>
+          </nav>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <span> {{ message }} </span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <!-- Main body below -->
+         <br>
+        <p style="font-size:20px; padding-left:2px;text-align:center">Here you can find all the public campaigns from each sponsor and also you can request for sponsorship for the campaigns.</p>
+        <hr>
+        <br>
+        <div class=row>
+            <div class="col-md-7" style="text-align:right; padding-right: 70px">
+                <p style="font-size:20px;"> <u>Public Campaigns</u> </p>
+            </div>
+            <!-- need to check for requirement of this button -->
+            <div class="col-md-5" style="text-align:right; padding-right:20px;">
+                <a href="/influencer/{{ influencer.influencer_username }}/campaigns/create_campaign"><button type="button" class="btn btn-info">Create Campaign</button></a>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            {% for campaign_public in campaign_public %}
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ campaign_public.campaign_name }}</h5>
+                        <p class="card-text" style="text-align:right"><b> Sponsor Name: </b>{{ campaign_public.sponsors.sponsor_name }}</p>
+                        <p class="card-text">{{ campaign_public.campaign_description }}</p>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal{{campaign_public.campaign_id}}">
+                            More details
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modal{{campaign_public.campaign_id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal{{campaign_public.campaign_id}}Label" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modal{{campaign_public.campaign_id}}Label">{{ campaign_public.campaign_name }}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                <p> <b>Sponsor Industry:</b> {{ campaign_public.sponsors.sponsor_industry }}</p>
+                                <p> <b>Campaign Description:</b> {{ campaign_public.campaign_description }}</p>
+                                <p> <b>Start Date:</b> {{ campaign_public.campaign_start_date }}</p>
+                                <p> <b>End Date:</b> {{ campaign_public.campaign_end_date }}</p>
+                                <p> <b>Budget:</b> {{ campaign_public.campaign_budget }}</p>
+                                <p> <b>Visibility:</b> {{ campaign_public.campaign_visibility }}</p>
+                                <p> <b>Goals:</b> {{ campaign_public.campaign_goals }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="/influencer/{{influencer.influencer_username}}/flag/{{campaign_public.sponsors.sponsor_username}}" method="POST">
+                                        <input type="submit" class="btn btn-warning" value="Flag Inappropriate" name="submit">
+                                    </form>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <br>
+                </div>
+                
+            {% endfor %}
+            
+            </div>
+    </body>
+</html>

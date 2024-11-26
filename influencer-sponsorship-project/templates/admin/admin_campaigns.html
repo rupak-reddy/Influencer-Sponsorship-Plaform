@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Admin Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../../static/css/home.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </head>
+    <body style="background-color: #fff8dc;">
+        <nav class="navbar navbar-expand-lg bg-body-secondary">
+            <div class="container-fluid">
+              <a class="navbar-brand">Influencer Sponsorship Connect Platform</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown" style="justify-content:right">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/admin/{{admin.admin_username}}/dashboard">Dashboard</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/admin/{{admin.admin_username}}/sponsors">Sponsors</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/admin/{{admin.admin_username}}/influencers">Influencers</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/admin/{{admin.admin_username}}/campaigns">Campaigns</a>
+                  </li> 
+                  <li class="nav-item">
+                    <a class="nav-link" href="/admin/{{admin.admin_username}}/adrequests">Ad-Requests</a>
+                  </li>   
+                  <li>
+              <form class="d-flex" action='/admin/{{ admin.admin_username }}/sponsors' method='POST'>
+                <button class="btn btn-outline-danger" type="submit" value='Logout' name='submit'>Logout</button>
+              </form>
+            </li>
+            </div>
+        </ul>
+            </div>
+          </nav>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <span> {{ message }} </span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <!-- Main body below -->
+         <br>
+        <p style="font-size:20px; padding-left:2px;text-align:center"> Welcome <u>{{ admin.admin_name}}</u>. Here you can see the list of all Campaigns created by the sponsors</p>
+        <hr>
+        <div class=row>
+          <div class="col-md-6" style="text-align:right">
+              <p style="font-size:20px;"> <u>Campaigns</u> </p>
+          </div>
+          <div class="col-md-6" style="text-align:right;">
+            <input type="search" id="search" name="search" placeholder="Search for Campaigns. Type any keyword you know..." style="width:80%">
+        </div>
+      </div>
+      <br>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle" id="campaigns_table">
+            <thead>
+                <tr>
+                    <th> S.No </th>
+                    <th> Sponsor Name </th>
+                    <th> Campaign Name  </th>
+                    <th> Campaign Description </th>
+                    <th> Campaign Start Date </th>
+                    <th> Campaign End Date </th>
+                    <th> Campaign Budget </th>
+                    <th> Campaign Visibility </th>
+                    <th> Campaign Goals </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for campaign in campaigns %}
+                <tr>
+                    <td> {{ loop.index }} </td>
+                    <td> {{ campaign.sponsors.sponsor_name }} </td>
+                    <td> {{ campaign.campaign_name }} </td>
+                    <td> {{ campaign.campaign_description }} </td>
+                    <td> {{ campaign.campaign_start_date }} </td>
+                    <td> {{ campaign.campaign_end_date }} </td>
+                    <td> {{ campaign.campaign_budget }} </td>
+                    <td> {{ campaign.campaign_visibility }} </td>
+                    <td> {{ campaign.campaign_goals }} </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // Select the search input element and the table body
+          const searchInput = document.getElementById('search');
+          const tableBody = document.getElementById('campaigns_table').getElementsByTagName('tbody')[0];
+      
+          // Add an event listener to the search input for the 'input' event
+          searchInput.addEventListener('input', () => {
+              // Get the current value of the search input and convert it to lowercase
+              const query = searchInput.value.toLowerCase();
+      
+              // Loop through each row in the table body
+              for (let row of tableBody.rows) {
+                  // Initialize a flag to track if the query is found
+                  let rowMatches = false;
+      
+                  // Loop through each cell in the row
+                  for (let cell of row.cells) {
+                      // Get the text content of the cell and convert it to lowercase
+                      const cellText = cell.textContent.toLowerCase();
+      
+                      // Check if the cell text includes the search query
+                      if (cellText.includes(query)) {
+                          // If it does, set the flag to true and break out of the cell loop
+                          rowMatches = true;
+                          break;
+                      }
+                  }
+      
+                  // Show or hide the row based on whether the query was found
+                  row.style.display = rowMatches ? '' : 'none';
+              }
+          });
+      });
+      
+
+
+      </script>
+    </body>
+</html>

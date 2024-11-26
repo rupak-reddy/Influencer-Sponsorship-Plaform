@@ -1,0 +1,28 @@
+
+.home{
+    text-align: center;
+    flex: auto;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+
+}
+.sponsor{
+    flex: auto;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+
+}
+.sponsorLogin{
+    background-color: bisque;
+}
+.navbar-nav > li{
+    padding-left:25px;
+    padding-right:25px;
+}
+.card{
+    display: inline-block;
+}
